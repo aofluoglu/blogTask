@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+</head>
+<body>
+{% extends 'header.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-2">
+        <!-- Categories List -->
+        <ul class="list-group">
+            {% if categories == None %}
+                No Post. Be the first to add.
+            {% else %}
+                <li class="list-group-item">
+                    <span class="badge">{{ category.count }}</span>
+                    Categories
+                </li>
+                {% for category in categories %}
+                    <li class="list-group-item">
+                        <span class="badge">{{ category.post_set.count }}</span>
+                        <a href="#">{{ category.cat_title }}</a>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+        <!-- #Categories List -->
+    </div>
+</div>
+{% endblock %}
+</body>
+</html>
