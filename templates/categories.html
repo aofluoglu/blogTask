@@ -9,8 +9,7 @@
     <title>Blog Home - Start Bootstrap Template</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous" />
 	<style type="text/css">
-	body {padding-top: 70px;}
-    footer {margin: 50px 0;}
+	body {padding-top: 70px;} footer {margin: 50px 0;}
     </style>
 </head>
 <body>
@@ -19,10 +18,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                <h1 class="page-header">
-                    Home Page
-                    <small>Lastest Post</small>
-                </h1>
+                <a href="{% url 'delete_cat' cat_pk %}">Delete</a>
                 {% for post in posts %}
                     <h2>
                         <a href="{% url 'post' post.post_cat_id post.id %}">{{ post.post_title }}</a>
@@ -32,32 +28,12 @@
                         by <a href="">{{ post.post_author }}</a>
                     </p>
                     <p><span class="glyphicon glyphicon-time"></span> Posted on {{ post.post_updatedAd }}</p>
-
                     <p>{{ post.post_content|slice:":300" }}...</p>
                     <a class="btn btn-primary" href="{% url 'post' post.post_cat_id post.id %}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
                     <hr>
                 {% endfor %}
             </div>
             <div class="col-md-4">
-                <div class="well">
-                    <h4>Blog Categories</h4>
-                    <div class="row">
-                        <div class="col-lg-10">
-                            <ul class="list-group">
-                            {% if categories == None %}
-                                No Post. Be the first to add.
-                            {% else %}
-                                {% for category in categories %}
-                                <li class="list-group-item">
-                                    <span class="badge">{{ category.post_set.count }}</span>
-                                    <a href="{% url 'category' category.id %}">{{ category.cat_title }}</a>
-                                </li>
-                                {% endfor %}
-                            {% endif %}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
         <hr>

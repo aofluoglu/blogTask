@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from TaskBlogApp.models import Author, Category, Post, Comment
+from TaskBlogApp.models import Category, Post, Comment
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -9,7 +9,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'post_cat', 'post_content', 'post_createdAt', 'post_updatedAd', 'post_like', 'post_dislike')
+    list_display = (
+    'id', 'post_cat', 'post_author', 'post_content', 'post_createdAt', 'post_updatedAd', 'post_like', 'post_dislike')
 
 
 class CommentAdmin(admin.ModelAdmin):
@@ -18,8 +19,6 @@ class CommentAdmin(admin.ModelAdmin):
         'comment_createdAt',
         'comment_updatedAt')
 
-
-admin.site.register(Author)
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Post, PostAdmin)

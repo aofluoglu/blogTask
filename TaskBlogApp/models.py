@@ -6,13 +6,6 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-class Author(models.Model):
-    author = models.OneToOneField(User)
-
-    def __str__(self):
-        return self.author.username
-
-
 class Category(models.Model):
     cat_title = models.CharField(max_length=70)
 
@@ -22,7 +15,7 @@ class Category(models.Model):
 
 class Post(models.Model):
     post_cat = models.ForeignKey(Category)
-    post_author = models.ForeignKey(Author)
+    post_author = models.ForeignKey(User)
 
     post_title = models.CharField(max_length=70)
     post_content = models.TextField()
@@ -39,7 +32,7 @@ class Post(models.Model):
 
 class Comment(models.Model):
     comment_post = models.ForeignKey(Post)
-    comment_author = models.ForeignKey(Author)
+    comment_author = models.ForeignKey(User)
 
     comment_content = models.CharField(max_length=100)
     comment_like = models.IntegerField(default=0)
