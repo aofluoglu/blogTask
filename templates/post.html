@@ -90,11 +90,12 @@ footer {
                                 {% if user.is_superuser %}
                                 <a href="{% url 'edit_comment' comment.comment_post.post_cat_id comment.comment_post_id comment.id %}">Edit</a>
                                 <a href="{% url 'delete_comment' comment.comment_post.post_cat_id comment.comment_post_id comment.id %}">Delete</a>
-                                {% endif %}
+                                {% else %}
                                 {% if request.user.id == comment.comment_author_id  %}
                                 <a href="{% url 'edit_comment' comment.comment_post.post_cat_id comment.comment_post_id comment.id %}">Edit</a>
                                 <a href="{% url 'delete_comment' comment.comment_post.post_cat_id comment.comment_post_id comment.id %}">Delete</a>
                                 {% endif %}
+                            {% endif %}
                             </div>
                             <div style="float: right;">
                             <small><a href="{% url 'like_comment' comment.comment_post.post_cat_id comment.comment_post_id comment.id  %}">Like</a></small> |

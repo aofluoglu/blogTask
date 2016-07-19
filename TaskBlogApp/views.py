@@ -290,11 +290,18 @@ class EditPostView(generic.UpdateView):
     fields = ['post_content', 'post_title', 'post_updatedAd']
 
     def get(self, request, *args, **kwargs):
-        post_form = UpdatePostForm()
-        return render(request, 'editPost.html', {
-            'post_form': post_form,
-            'post_form_error': post_form.errors
-        })
+        if request.user.is_authenticated():
+            post = Post.objects.get(id=kwargs['pk'])
+            if request.user.pk == post.post_author_id or request.user.is_superuser:
+                post_form = UpdatePostForm()
+                return render(request, 'editPost.html', {
+                    'post_form': post_form,
+                    'post_form_error': post_form.errors
+                })
+            else:
+                return HttpResponseRedirect('/')
+        else:
+            return HttpResponseRedirect('/')
 
     def post(self, request, *args, **kwargs):
         post_form = UpdatePostForm(request.POST)
@@ -316,10 +323,18 @@ class EditPostView(generic.UpdateView):
 
 class DeletePostView(generic.DeleteView):
     def get(self, request, *args, **kwargs):
-        post = Post.objects.get(id=kwargs['pk'])
-        post.delete()
+        if request.user.is_authenticated():
+            post = Post.objects.get(id=kwargs['pk'])
+            if request.user.pk == post.post_author_id or request.user.is_superuser:
+                post = Post.objects.get(id=kwargs['pk'])
+                post.delete()
 
-        return HttpResponseRedirect('/category/%s/' % kwargs['id'])
+                return HttpResponseRedirect('/category/%s/' % kwargs['id'])
+            else:
+                return HttpResponseRedirect('/category/%s/' % kwargs['id'])
+
+        else:
+            return HttpResponseRedirect('/login/')
 
 
 class EditCommentView(generic.FormView):
@@ -327,11 +342,18 @@ class EditCommentView(generic.FormView):
     form_class = AddCommentForm
 
     def get(self, request, *args, **kwargs):
-        form = AddCommentForm()
-        return render(request, 'editComment.html', {
-            'form': form,
-            'form_error': form.errors
-        })
+        if request.user.is_authenticated():
+            comment = Comment.objects.get(id=kwargs['comment_id'])
+            if request.user.pk == comment.comment_author_id or request.user.is_superuser:
+                form = AddCommentForm()
+                return render(request, 'editComment.html', {
+                    'form': form,
+                    'form_error': form.errors
+                })
+            else:
+                return HttpResponseRedirect('/category/%s/post/%s/' % (kwargs['id'], kwargs['pk']))
+        else:
+            return HttpResponseRedirect('/login/')
 
     def post(self, request, *args, **kwargs):
         form = AddCommentForm(request.POST)
@@ -352,31 +374,44 @@ class EditCommentView(generic.FormView):
 
 class DeleteCommentView(generic.View):
     def get(self, request, *args, **kwargs):
-        comment = Comment.objects.get(id=kwargs['comment_id'])
-        comment.delete()
+        if request.user.is_authenticated():
+            comment = Comment.objects.get(id=kwargs['comment_id'])
+            if request.user.pk == comment.comment_author_id or request.user.is_superuser:
+                comment = Comment.objects.get(id=kwargs['comment_id'])
+                comment.delete()
 
-        return HttpResponseRedirect('/category/%s/post/%s' % (kwargs['id'], kwargs['pk']))
+                return HttpResponseRedirect('/category/%s/post/%s' % (kwargs['id'], kwargs['pk']))
+            else:
+                return HttpResponseRedirect('/login/')
+        else:
+            return HttpResponseRedirect('/login/')
 
 
 class DeleteCatView(generic.DeleteView):
     def get(self, request, *args, **kwargs):
-        try:
-            posts = Post.objects.filter(post_cat_id=self.kwargs.get('id'))
-        except Category.DoesNotExist:
-            posts = None
-        try:
-            cat_other = Category.objects.get(cat_title='other')
-        except Category.DoesNotExist:
-            cat_other = Category.objects.create(cat_title='other')
+        if request.user.is_authenticated():
+            if request.user.is_superuser():
+                try:
+                    posts = Post.objects.filter(post_cat_id=self.kwargs.get('id'))
+                except Category.DoesNotExist:
+                    posts = None
+                try:
+                    cat_other = Category.objects.get(cat_title='other')
+                except Category.DoesNotExist:
+                    cat_other = Category.objects.create(cat_title='other')
 
-        if posts is not None:
-            for post in posts:
-                post.post_cat = cat_other
-                post.save()
+                if posts is not None:
+                    for post in posts:
+                        post.post_cat = cat_other
+                        post.save()
 
-            cat_del = Category.objects.get(id=self.kwargs.get('id'))
-            cat_del.delete()
+                    cat_del = Category.objects.get(id=self.kwargs.get('id'))
+                    cat_del.delete()
 
-            return HttpResponseRedirect('/category/%s/' % cat_other.id)
+                    return HttpResponseRedirect('/category/%s/' % cat_other.id)
+                else:
+                    return HttpResponseRedirect('/category/%s/' % self.kwargs.get('id'))
+            else:
+                return HttpResponseRedirect('/category/%s/' % self.kwargs.get('id'))
         else:
             return HttpResponseRedirect('/category/%s/' % self.kwargs.get('id'))
