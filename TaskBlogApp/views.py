@@ -374,7 +374,7 @@ class EditCommentView(generic.FormView):
 
 class DeleteCommentView(generic.View):
     def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
+        if request.user.is_authenticated() or request.user.is_superuser:
             comment = Comment.objects.get(id=kwargs['comment_id'])
             if request.user.pk == comment.comment_author_id or request.user.is_superuser:
                 comment = Comment.objects.get(id=kwargs['comment_id'])
@@ -389,29 +389,27 @@ class DeleteCommentView(generic.View):
 
 class DeleteCatView(generic.DeleteView):
     def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
-            if request.user.is_superuser():
-                try:
-                    posts = Post.objects.filter(post_cat_id=self.kwargs.get('id'))
-                except Category.DoesNotExist:
-                    posts = None
-                try:
-                    cat_other = Category.objects.get(cat_title='other')
-                except Category.DoesNotExist:
-                    cat_other = Category.objects.create(cat_title='other')
+        if request.user.is_authenticated() or request.user.is_superuser:
+            try:
+                posts = Post.objects.filter(post_cat_id=self.kwargs.get('id'))
+            except Category.DoesNotExist:
+                posts = None
+            try:
+                cat_other = Category.objects.get(cat_title='other')
+            except Category.DoesNotExist:
+                cat_other = Category.objects.create(cat_title='other')
 
-                if posts is not None:
-                    for post in posts:
-                        post.post_cat = cat_other
-                        post.save()
+            if posts is not None:
+                for post in posts:
+                    post.post_cat = cat_other
+                    post.save()
 
-                    cat_del = Category.objects.get(id=self.kwargs.get('id'))
-                    cat_del.delete()
+                cat_del = Category.objects.get(id=self.kwargs.get('id'))
+                cat_del.delete()
 
-                    return HttpResponseRedirect('/category/%s/' % cat_other.id)
-                else:
-                    return HttpResponseRedirect('/category/%s/' % self.kwargs.get('id'))
+                return HttpResponseRedirect('/category/%s/' % cat_other.id)
             else:
                 return HttpResponseRedirect('/category/%s/' % self.kwargs.get('id'))
+
         else:
             return HttpResponseRedirect('/category/%s/' % self.kwargs.get('id'))
