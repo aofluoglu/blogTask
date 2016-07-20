@@ -49,11 +49,14 @@ urlpatterns = [
     url(r'^category/(?P<id>[0-9]+)/post/(?P<pk>[0-9]+)/delete/$', views.DeletePostView.as_view(),
         name='delete_post'),
 
-    url(r'^category/(?P<id>[0-9]+)/post/(?P<pk>[0-9]+)/comment/(?P<comment_id>[0-9]+)/edit/$', views.EditCommentView.as_view(),
+    url(r'^category/(?P<id>[0-9]+)/post/(?P<pk>[0-9]+)/comment/(?P<comment_id>[0-9]+)/edit/$',
+        views.EditCommentView.as_view(),
         name='edit_comment'),
     url(r'^category/(?P<id>[0-9]+)/post/(?P<pk>[0-9]+)/comment/(?P<comment_id>[0-9]+)/delete/$',
         views.DeleteCommentView.as_view(),
         name='delete_comment'),
 
     url(r'^category/(?P<id>[0-9]+)/delete/$', views.DeleteCatView.as_view(), name='delete_cat'),
+    url(r'^profile/(?P<id>[0-9]+)/$', views.ProfileView.as_view(), name='profile'),
+    url(r'^search/$', views.SearchView.as_view(), name='search'),
 ]

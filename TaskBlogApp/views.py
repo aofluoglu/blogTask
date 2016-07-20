@@ -2,13 +2,17 @@ from datetime import datetime
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.db.models import Q
 from django.http import HttpResponseRedirect
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views import generic
 from django.contrib.auth.forms import AuthenticationForm
 
 # Create your views here.
-from TaskBlogApp.forms import LoginForm, SignupForm, AddPostForm, AddCommentForm, AddCategoryForm, UpdatePostForm
+from TaskBlogApp.forms import LoginForm, SignupForm, AddPostForm, AddCommentForm, AddCategoryForm, UpdatePostForm, \
+    SearchForm
 from TaskBlogApp.models import Category, Post, Comment
 
 
@@ -412,4 +416,49 @@ class DeleteCatView(generic.DeleteView):
                 return HttpResponseRedirect('/category/%s/' % self.kwargs.get('id'))
 
         else:
-            return HttpResponseRedirect('/category/%s/' % self.kwargs.get('id'))
+            return HttpResponseRedirect('/login/')
+
+
+class ProfileView(generic.View):
+    template_name = 'profile.html'
+
+    def get(self, request, id):
+        try:
+            posts = Post.objects.filter(post_author=self.kwargs['id']).order_by('post_updatedAd')
+        except Post.DoesNotExist:
+            posts = None
+        try:
+            comments = Comment.objects.filter(comment_author=self.kwargs['id']).order_by('comment_updatedAt')
+        except Comment.DoesNotExist:
+            comments = None
+        user = User.objects.get(id=self.kwargs['id'])
+
+        return render(request, 'profile.html', {
+            'posts': posts,
+            'comments': comments,
+            'user': user
+        })
+
+
+class SearchView(generic.View):
+    template_name = "search.html"
+
+    def get(self, request):
+        form = SearchForm()
+        posts = None
+        return render(request, 'search.html', {
+            'form': form,
+            'error': form.errors,
+            'posts': posts
+        })
+
+    def post(self, request):
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            posts = Post.objects.filter(post_title__icontains=form.data.get('title'))
+
+            return render(request, 'search.html', {
+                'form': form,
+                'error': form.errors,
+                'posts': posts
+            })

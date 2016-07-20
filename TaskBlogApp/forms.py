@@ -39,3 +39,7 @@ class UpdatePostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = {'post_content', 'post_title'}
+
+
+class SearchForm(forms.Form):
+    title = forms.CharField()
