@@ -74,7 +74,7 @@ footer {
                 </div>
                 <hr>
             {% if post.comment_set %}
-                {% for comment in post.comment_set.all %}
+                {% for comment in post.comment_set.all|dictsortreversed:"comment_updatedAt" %}
                 <div class="media">
                     <a class="pull-left" href="#">
                         <img class="media-object" src="http://placehold.it/64x64" alt="">
