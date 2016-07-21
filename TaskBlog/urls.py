@@ -59,4 +59,5 @@ urlpatterns = [
     url(r'^category/(?P<id>[0-9]+)/delete/$', views.DeleteCatView.as_view(), name='delete_cat'),
     url(r'^profile/(?P<id>[0-9]+)/$', views.ProfileView.as_view(), name='profile'),
     url(r'^search/$', views.SearchView.as_view(), name='search'),
+    url(r'^profile/edit/(?P<id>[0-9]+)/$', views.EditProfileView.as_view(), name='edit-profile'),
 ]

@@ -43,3 +43,9 @@ class UpdatePostForm(forms.ModelForm):
 
 class SearchForm(forms.Form):
     title = forms.CharField()
+
+
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = {'username', 'email'}

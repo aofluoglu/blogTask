@@ -27,9 +27,9 @@
             <div class="col-md-8">
                 <div class="panel panel-default">
                     <!-- Default panel contents -->
-                    <div class="panel-heading">User : {{ user.first_name }} {{ user.last_name }}</div>
+                    <div class="panel-heading">User : {{ users.first_name }} {{ users.last_name }}</div>
                     <div class="panel-body">
-                        <p>{{ user.first_name }}'s profile</p>
+                        <p>{{ users.first_name }}'s profile  {% if user.pk == id %}| <a href="{% url 'edit-profile' user.pk %}">Edit Profile</a>{% endif %}</p>
                     </div>
                     <!-- Table -->
                     <table class="table">
@@ -50,15 +50,15 @@
                         <tbody>
                         <tr>
                             <th scope="row">1</th>
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.first_name }}</td>
-                            <td>{{ user.last_name }}</td>
-                            <td>{{ user.email }}</td>
-                            <td>{{ user.last_login }}</td>
+                            <td>{{ users.username }}</td>
+                            <td>{{ users.first_name }}</td>
+                            <td>{{ users.last_name }}</td>
+                            <td>{{ users.email }}</td>
+                            <td>{{ users.last_login }}</td>
                             <td>{{ posts.count }}</td>
                             <td>{{ comments.count }}</td>
                             <td>{% if not user.is_superuser %}Normal User{% else %}Super User{% endif %}</td>
-                            <td>{{ user.date_joined }}</td>
+                            <td>{{ users.date_joined }}</td>
                         </tr>
                         </tbody>
                     </table>

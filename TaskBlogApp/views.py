@@ -12,7 +12,7 @@ from django.contrib.auth.forms import AuthenticationForm
 
 # Create your views here.
 from TaskBlogApp.forms import LoginForm, SignupForm, AddPostForm, AddCommentForm, AddCategoryForm, UpdatePostForm, \
-    SearchForm
+    SearchForm, EditProfileForm
 from TaskBlogApp.models import Category, Post, Comment
 
 
@@ -436,7 +436,8 @@ class ProfileView(generic.View):
         return render(request, 'profile.html', {
             'posts': posts,
             'comments': comments,
-            'user': user
+            'users': user,
+            'id': int(self.kwargs.get('id'))
         })
 
 
@@ -454,11 +455,44 @@ class SearchView(generic.View):
 
     def post(self, request):
         form = SearchForm(request.POST)
+
         if form.is_valid():
             posts = Post.objects.filter(post_title__icontains=form.data.get('title'))
-
             return render(request, 'search.html', {
                 'form': form,
                 'error': form.errors,
                 'posts': posts
+            })
+        else:
+            return render(request, 'search.html', {
+                'form': form,
+                'error': form.errors
+            })
+
+
+class EditProfileView(generic.View):
+    template_name = 'edit-profile.html'
+
+    def get(self, request, id):
+        if request.user.pk == id:
+            edit_form = EditProfileForm()
+            return render(request, 'edit-profile.html', {
+                'edit_form': edit_form,
+                'edit_form_error': edit_form.errors
+            })
+        else:
+            HttpResponseRedirect('/')
+
+    def post(self, request, id):
+        edit_form = EditProfileForm(request.POST)
+        if edit_form.is_valid():
+            users = User.objects.get(id=id)
+            users.username = edit_form.data.get('username')
+            users.email = edit_form.data.get('email')
+            users.save()
+            return HttpResponseRedirect('/profile/%s' % id)
+        else:
+            return render(request, 'edit-profile.html', {
+                'edit_form': edit_form,
+                'edit_form_error': edit_form.errors
             })
