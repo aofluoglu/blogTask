@@ -431,7 +431,7 @@ class ProfileView(generic.View):
             comments = Comment.objects.filter(comment_author=self.kwargs['id']).order_by('comment_updatedAt')
         except Comment.DoesNotExist:
             comments = None
-        user = User.objects.get(id=self.kwargs['id'])
+        user = User.objects.get(pk=self.kwargs['id'])
 
         return render(request, 'profile.html', {
             'posts': posts,
@@ -486,7 +486,7 @@ class EditProfileView(generic.View):
     def post(self, request, id):
         edit_form = EditProfileForm(request.POST)
         if edit_form.is_valid():
-            users = User.objects.get(id=id)
+            users = User.objects.get(pk=id)
             users.username = edit_form.data.get('username')
             users.email = edit_form.data.get('email')
             users.save()

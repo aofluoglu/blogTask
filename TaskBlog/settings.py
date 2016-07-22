@@ -39,6 +39,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'TaskBlogApp',
+    'rest_framework',
+    'drf',
 )
 
 MIDDLEWARE_CLASSES = (
