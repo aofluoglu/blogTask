@@ -3,16 +3,17 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 
-
 # Create your models here.
+from django.utils.encoding import python_2_unicode_compatible
 
+@python_2_unicode_compatible
 class Category(models.Model):
     cat_title = models.CharField(max_length=70)
 
     def __str__(self):
         return self.cat_title
 
-
+@python_2_unicode_compatible
 class Post(models.Model):
     post_cat = models.ForeignKey(Category)
     post_author = models.ForeignKey(User)
@@ -30,6 +31,7 @@ class Post(models.Model):
         return self.post_title
 
 
+@python_2_unicode_compatible
 class Comment(models.Model):
     comment_post = models.ForeignKey(Post)
     comment_author = models.ForeignKey(User)
@@ -43,6 +45,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.comment_content
-
-
-

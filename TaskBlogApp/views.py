@@ -11,6 +11,7 @@ from django.views import generic
 from django.contrib.auth.forms import AuthenticationForm
 
 # Create your views here.
+from django.utils.six import python_2_unicode_compatible
 from TaskBlogApp.forms import LoginForm, SignupForm, AddPostForm, AddCommentForm, AddCategoryForm, UpdatePostForm, \
     SearchForm, EditProfileForm
 from TaskBlogApp.models import Category, Post, Comment
@@ -130,22 +131,6 @@ class LoginView(generic.FormView):
                 'login_form': login_form,
                 'login_error': error
             })
-        """
-        login_form = LoginForm(request.POST)
-        user = authenticate(username=login_form.data.get('username'), password=login_form.data.get('password'))
-        if user:
-            if user.is_active:
-                login(request, user)
-                return HttpResponseRedirect('/')
-            else:
-                pass
-        else:
-            pass
-
-        return render(request, 'login.html', {
-            'login_form': login_form,
-            'login_error': login_form.errors
-        })"""
 
 
 class LogoutView(generic.View):
@@ -201,8 +186,7 @@ class AddPostView(generic.FormView):
             add_post_form.instance.post_author = request.user
             add_post_form.save()
 
-            return HttpResponseRedirect(
-                '/')
+            return HttpResponseRedirect('/')
         else:
             return render(request, 'add_post.html', {
                 'add_post_form': add_post_form,
@@ -303,7 +287,7 @@ class EditPostView(generic.UpdateView):
                     'post_form_error': post_form.errors
                 })
             else:
-                return HttpResponseRedirect('/')
+                return HttpResponseRedirect('/category/%s/post/%s/' % (post.post_cat_id, kwargs['pk']))
         else:
             return HttpResponseRedirect('/')
 
@@ -317,7 +301,7 @@ class EditPostView(generic.UpdateView):
             post.post_updatedAd = datetime.now()
             post.save()
 
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/category/%s/post/%s/' % (post.post_cat_id, kwargs['pk']))
         else:
             return render(request, 'editPost.html', {
                 'post_form': post_form,

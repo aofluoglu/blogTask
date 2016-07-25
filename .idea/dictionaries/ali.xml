@@ -1,6 +1,8 @@
 <component name="ProjectDictionaryState">
   <dictionary name="ali">
     <words>
+      <w>authtoken</w>
+      <w>csrf</w>
       <w>glyphicon</w>
       <w>jumbotron</w>
       <w>navbar</w>
