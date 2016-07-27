@@ -1,18 +1,12 @@
 #!/usr/bin/env python
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.core.serializers import json
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, status
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ParseError
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from TaskBlogApp.models import Category, Post, Comment
-from drf.serializer import CategorySerializers, PostsSerializers, CommentSerializers, UserSerializers, LoginSerializers, \
-    TokenSerializers
+from drf.serializer import CategorySerializers, PostsSerializers, CommentSerializers, UserSerializers
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

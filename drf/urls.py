@@ -8,7 +8,6 @@ router.register(r'category', views.CategoryViewSet, base_name='category')
 router.register(r'post', views.PostsViewSet, base_name='post')
 router.register(r'comment', views.CommentViewSet, base_name='comment')
 router.register(r'user', views.UserViewSet)
-# router.register(r'auth', views.LoginViewSet, base_name='login')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
